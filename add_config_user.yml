@@ -1,0 +1,19 @@
+-
+  name: Test for Ubiminds
+  hosts: test_host
+  tasks:
+    - name: Adding the new user with home directory
+      user:
+        name: norberto
+        create_home: yes
+        generate_ssh_key: yes
+        comment: 'Norberto Neto'
+      become: true
+
+    - name: Fetching user key from host
+      fetch:
+        name: getting key from user
+        src: /home/norberto/.ssh/id_rsa
+        dest: /home/norberto/ONEDRIVE/KEYS/norberto-test_host.pem
+        flat: yes
+      become: true
