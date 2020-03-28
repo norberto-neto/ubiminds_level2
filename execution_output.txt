@@ -1,0 +1,46 @@
+norberto@NI-86267-6:~/ONEDRIVE/CODES/ANSIBLE/UBI$ ls -al
+total 4
+drwxrwxrwx 1 norberto norberto 4096 Mar 28 10:46 .
+drwxrwxrwx 1 norberto norberto 4096 Mar 28 09:26 ..
+-rw-rw-rw- 1 norberto norberto  483 Mar 28 10:40 add_config_user.yml
+-rw-rw-rw- 1 norberto norberto  160 Mar 28 10:40 inventory.txt
+norberto@NI-86267-6:~/ONEDRIVE/CODES/ANSIBLE/UBI$ cat inventory.txt
+test_host ansible_host=3.88.165.232 ansible_connection=ssh ansible_user=ec2-user ansible_ssh_private_key_file=/home/norberto/ONEDRIVE/KEYS/shampzz-virginia.pem
+norberto@NI-86267-6:~/ONEDRIVE/CODES/ANSIBLE/UBI$ cat add_config_user.yml
+-
+  name: Test for Ubiminds
+  hosts: test_host
+  tasks:
+    - name: Adding the new user with home directory
+      user:
+        name: norberto
+        create_home: yes
+        generate_ssh_key: yes
+        comment: 'Norberto Neto'
+      become: true
+
+    - name: Fetching user key from host
+      fetch:
+        name: getting key from user
+        src: /home/norberto/.ssh/id_rsa
+        dest: /home/norberto/ONEDRIVE/KEYS/norberto-test_host.pem
+        flat: yes
+      become: true
+norberto@NI-86267-6:~/ONEDRIVE/CODES/ANSIBLE/UBI$ ansible-playbook add_config_user.yml -i inventory.txt
+ [WARNING] Ansible is in a world writable directory (/mnt/c/Users/tec_nsilva/OneDrive - UNIVERSO ONLINE S.A/CODES/ANSIBLE/UBI), ignoring it as an ansible.cfg source.
+
+PLAY [Test for Ubiminds] ***************************************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************************************************
+ok: [test_host]
+
+TASK [Adding the new user with home directory] *****************************************************************************************************************************
+changed: [test_host]
+
+TASK [Fetching user key from host] *****************************************************************************************************************************************
+changed: [test_host]
+
+PLAY RECAP *****************************************************************************************************************************************************************
+test_host                  : ok=3    changed=2    unreachable=0    failed=0
+
+norberto@NI-86267-6:~/ONEDRIVE/CODES/ANSIBLE/UBI$
